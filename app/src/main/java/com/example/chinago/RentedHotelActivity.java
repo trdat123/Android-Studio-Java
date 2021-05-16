@@ -1,6 +1,7 @@
 package com.example.chinago;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +17,7 @@ public class RentedHotelActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.HotelRecView);
         HotelRecViewAdapter adapter = new HotelRecViewAdapter(this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.setHotels(Utils.getOutOfRoomHotels());
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        adapter.setHotels(Utils.getRentedHotels());
     }
 }

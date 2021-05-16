@@ -53,6 +53,10 @@ public class Hotel {
         this.room = room;
     }
 
+    public void setRentedRoom() {
+        this.room -= 1;
+    }
+
     public void setImageURl(String imageURl) {
         this.imageURl = imageURl;
     }

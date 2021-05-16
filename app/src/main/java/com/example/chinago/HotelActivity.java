@@ -30,7 +30,6 @@ public class HotelActivity extends AppCompatActivity {
     private Button btnConfirmRent;
     private BottomSheetDialog bottomSheet;
     private Context context;
-    Hotel incomingHotel;
 
     public static final String HOTEL_ID_KEY = "hotelId";
 
@@ -45,7 +44,7 @@ public class HotelActivity extends AppCompatActivity {
         if (null != intent) {
             int hotelId = intent.getIntExtra(HOTEL_ID_KEY, -1);
             if (hotelId != -1) {
-                incomingHotel = Utils.getInstance().getHotelById(hotelId);
+                Hotel incomingHotel = Utils.getInstance().getHotelById(hotelId);
                 if (null != incomingHotel) {
                     setData(incomingHotel);
 
@@ -53,32 +52,20 @@ public class HotelActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 
-        /*btnConfirmRent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, BottomSheet.class);
-                intent.putExtra(HOTEL_ID_KEY, incomingHotel.getId());
-                context.startActivity(intent);
+    private void setIntent() {
 
-                bottomSheet = new BottomSheetDialog(HotelActivity.this, R.style.BottomSheetTheme);
-
-                View sheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.bottom_sheet,
-                        (ViewGroup) findViewById(R.id.BottomSheet));
-                bottomSheet.setContentView(sheetView);
-                bottomSheet.show();
-            }
-        });*/
     }
 
     private void handleOutOfRoom(Hotel hotel) {
-        /*ArrayList<Hotel> outOfRoomHotels = Utils.getInstance().getOutOfRoomHotels();
+        /*ArrayList<Hotel> outOfRoomHotels = Utils.getInstance().getRentedHotels();
         for(Hotel h: outOfRoomHotels) {
             if (hotel.getRoom() == 0) {
                 outOfRoom = true;
             }
         }*/
-        
+
         boolean outOfRoom = false;
 
         if (hotel.getRoom() == 0) {
@@ -93,8 +80,16 @@ public class HotelActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Utils.getInstance().addToRentHistory(hotel)) {
+                        // Add hotel to history list and update room
                         Toast.makeText(HotelActivity.this, "Đã đặt phòng", Toast.LENGTH_SHORT).show();
-                        // Add hotel to history list
+
+                        // Refresh page
+                        finish();
+                        Intent intent = getIntent();
+                        intent.getIntExtra(HOTEL_ID_KEY, -1);
+
+                        startActivity(intent);
+
                     } else {
                         Toast.makeText(HotelActivity.this, "Có lỗi xảy ra, xin vui lòng thử lại", Toast.LENGTH_SHORT).show();
                     }

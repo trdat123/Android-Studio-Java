@@ -6,7 +6,7 @@ public class Utils {
     private static Utils instance;
 
     private static ArrayList<Hotel> allHotels;
-    private static ArrayList<Hotel> outOfRoomHotels;
+    private static ArrayList<Hotel> rentedHotels;
 
     private Utils() {
         if (null == allHotels) {
@@ -14,9 +14,8 @@ public class Utils {
             initData();
         }
 
-        if (null == outOfRoomHotels) {
-            outOfRoomHotels = new ArrayList<>();
-            initData();
+        if (null == rentedHotels) {
+            rentedHotels = new ArrayList<>();
         }
     }
 
@@ -45,8 +44,8 @@ public class Utils {
         return allHotels;
     }
 
-    public static ArrayList<Hotel> getOutOfRoomHotels() {
-        return outOfRoomHotels;
+    public static ArrayList<Hotel> getRentedHotels() {
+        return rentedHotels;
     }
 
     public Hotel getHotelById(int id) {
@@ -59,7 +58,8 @@ public class Utils {
     }
 
     public boolean addToRentHistory(Hotel hotel) {
-        return outOfRoomHotels.add(hotel);
+        hotel.setRentedRoom();
+        return rentedHotels.add(hotel);
     }
 }
 

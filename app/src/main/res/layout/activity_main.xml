@@ -147,13 +147,14 @@
                 android:id="@+id/textMain1"
                 android:textStyle="bold"
                 android:textSize="17dp"
-                android:layout_margin="5dp"/>
+                android:layout_margin="10dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_below="@+id/textMain1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/RecView" >
+                android:id="@+id/RecView"
+                android:layout_margin="5dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 

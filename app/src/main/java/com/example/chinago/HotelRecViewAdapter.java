@@ -64,6 +64,7 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
 
     public void setHotels(ArrayList<Hotel> hotels) {
         this.hotels = hotels;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
