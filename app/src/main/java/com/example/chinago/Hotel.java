@@ -1,5 +1,7 @@
 package com.example.chinago;
 
+import java.util.Date;
+
 public class Hotel {
     private int id;
     private String name;
@@ -53,8 +55,12 @@ public class Hotel {
         this.room = room;
     }
 
-    public void setRentedRoom() {
-        this.room -= 1;
+    public void setRentedRoom(int room) {
+        this.room -= room;
+    }
+
+    public void deleteRentedRoom(int room) {
+        this.room += room;
     }
 
     public void setImageURl(String imageURl) {

@@ -15,7 +15,7 @@ public class RentedHotelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rented_hotel);
 
         RecyclerView recyclerView = findViewById(R.id.HotelRecView);
-        HotelRecViewAdapter adapter = new HotelRecViewAdapter(this);
+        HotelRecViewAdapter adapter = new HotelRecViewAdapter(this, "RentHotel");
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         adapter.setHotels(Utils.getRentedHotels());

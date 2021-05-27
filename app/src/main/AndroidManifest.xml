@@ -11,15 +11,19 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Chinago">
-        <activity android:name=".RentedHotelActivity"></activity>
-        <activity android:name=".HotelActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Signup" />
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RentedHotelActivity" />
+        <activity
+            android:name=".HotelActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

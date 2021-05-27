@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView RecView;
-    private Button btnShowHistory;
+    private Button btnShowHistory, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
         RecView = findViewById(R.id.RecView);
         btnShowHistory = findViewById(R.id.btnShowHistory);
+        btnLogout = findViewById(R.id.btnLogout);
 
-        HotelRecViewAdapter adapter = new HotelRecViewAdapter(this);
+        HotelRecViewAdapter adapter = new HotelRecViewAdapter(this, "Main");
         adapter.setHotels(Utils.getInstance().getAllHotels());
 
         RecView.setAdapter(adapter);
@@ -41,5 +44,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Utils.getInstance();
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
+        });
     }
 }

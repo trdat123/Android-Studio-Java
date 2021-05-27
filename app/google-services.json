@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1061628389886",
+    "project_id": "chinago-83b08",
+    "storage_bucket": "chinago-83b08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061628389886:android:4037a4072fb23caedaf8af",
+        "android_client_info": {
+          "package_name": "com.example.chinago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061628389886-rg5sc0acfftf6pnd7h2htrecoh33ui0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzrpUD_Df36UXpVTJiYkbytg5HOTjK834"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061628389886-rg5sc0acfftf6pnd7h2htrecoh33ui0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

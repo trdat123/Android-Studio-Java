@@ -2,25 +2,26 @@ package com.example.chinago;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 
-public class HotelActivity extends AppCompatActivity {
+public class HotelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private TextView HotelName;
     private TextView HotelDescription;
@@ -28,8 +29,8 @@ public class HotelActivity extends AppCompatActivity {
     private TextView RoomPrice;
     private ImageView HotelImage;
     private Button btnConfirmRent;
-    private BottomSheetDialog bottomSheet;
-    private Context context;
+    private TextInputEditText roomInput;
+    private TextInputLayout roomInputLayout;
 
     public static final String HOTEL_ID_KEY = "hotelId";
 
@@ -48,14 +49,37 @@ public class HotelActivity extends AppCompatActivity {
                 if (null != incomingHotel) {
                     setData(incomingHotel);
 
+                    // handle user input (room)
+                    roomInput.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if (s.length() == 0 || Integer.parseInt(String.valueOf(s)) == 0) {
+                                roomInputLayout.setError("Vui lòng nhập số phòng hợp lệ");
+                                btnConfirmRent.setEnabled(false);
+                            } else if (Integer.parseInt(String.valueOf(s)) > incomingHotel.getRoom()) {
+                                roomInputLayout.setError("Vượt quá số phòng còn lại");
+                                btnConfirmRent.setEnabled(false);
+                            } else {
+                                btnConfirmRent.setEnabled(true);
+                                roomInputLayout.setError(null);
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
+
+                    //handle if out of room, if still has room => proceed to book
                     handleOutOfRoom(incomingHotel);
                 }
             }
         }
-    }
-
-    private void setIntent() {
-
     }
 
     private void handleOutOfRoom(Hotel hotel) {
@@ -82,14 +106,13 @@ public class HotelActivity extends AppCompatActivity {
                     if (Utils.getInstance().addToRentHistory(hotel)) {
                         // Add hotel to history list and update room
                         Toast.makeText(HotelActivity.this, "Đã đặt phòng", Toast.LENGTH_SHORT).show();
+                        setRentedRoom(hotel);
 
                         // Refresh page
                         finish();
                         Intent intent = getIntent();
                         intent.getIntExtra(HOTEL_ID_KEY, -1);
-
                         startActivity(intent);
-
                     } else {
                         Toast.makeText(HotelActivity.this, "Có lỗi xảy ra, xin vui lòng thử lại", Toast.LENGTH_SHORT).show();
                     }
@@ -98,12 +121,18 @@ public class HotelActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void setData(Hotel hotel) {
         HotelName.setText(hotel.getName());
         HotelDescription.setText(hotel.getDescription());
         HotelRoom.setText("Chỉ còn " + String.valueOf(hotel.getRoom()) + " phòng");
         RoomPrice.setText(hotel.getRoomPrice() + " mỗi phòng");
         Glide.with(this).asBitmap().load(hotel.getImageURl()).into(HotelImage);
+        btnConfirmRent.setEnabled(false);
+    }
+
+    private void setRentedRoom(Hotel hotel) {
+        hotel.setRoom(Integer.parseInt(String.valueOf(roomInput.getText())));
     }
 
     private void initView() {
@@ -113,5 +142,23 @@ public class HotelActivity extends AppCompatActivity {
         RoomPrice = findViewById(R.id.roomPrice);
         HotelImage = findViewById(R.id.HotelImageDetail);
         btnConfirmRent = findViewById(R.id.confirmRent);
+        roomInput = findViewById(R.id.roomInput);
+        roomInputLayout = findViewById(R.id.roomInputLayout);
+    }
+
+    public void chooseCheckoutDate(View view) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DATE)
+        );
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
     }
 }

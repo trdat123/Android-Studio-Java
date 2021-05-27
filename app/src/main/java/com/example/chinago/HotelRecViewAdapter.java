@@ -1,16 +1,19 @@
 package com.example.chinago;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,9 +27,11 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
 
     private ArrayList<Hotel> hotels = new ArrayList<>();
     private Context context;
+    private String parentActivity;
 
-    public HotelRecViewAdapter(Context context) {
+    public HotelRecViewAdapter(Context context, String parentActivity) {
         this.context = context;
+        this.parentActivity = parentActivity;
     }
 
     @NonNull
@@ -41,6 +46,36 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
     public void onBindViewHolder(@NonNull HotelRecViewAdapter.ViewHolder holder, int position) {
         holder.HotelName.setText(hotels.get(position).getName());
         holder.HotelDescription.setText(hotels.get(position).getDescription());
+
+        if (parentActivity.equals("Main")) {
+            holder.btnDelete.setVisibility(View.GONE);
+        } else if (parentActivity.equals("RentHotel")) {
+            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Bạn có chắc muốn hủy đơn đặt phòng?");
+                    builder.setPositiveButton("Hủy", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (Utils.getInstance().removeFromRentHistory(hotels.get(position))) {
+                                Toast.makeText(context, "Đã hủy đơn đặt phòng", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(context, "Có lỗi xảy ra xin vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing
+                        }
+                    });
+                    builder.create().show();
+                }
+            });
+        }
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +108,7 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
         private CardView parent;
         private ImageView image;
         private TextView HotelDescription;
-
+        private Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +116,7 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
             parent = itemView.findViewById(R.id.parent);
             image = itemView.findViewById(R.id.HotelImage);
             HotelDescription = itemView.findViewById(R.id.HotelDescription);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 

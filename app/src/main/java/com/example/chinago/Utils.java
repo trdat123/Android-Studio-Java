@@ -58,8 +58,11 @@ public class Utils {
     }
 
     public boolean addToRentHistory(Hotel hotel) {
-        hotel.setRentedRoom();
         return rentedHotels.add(hotel);
+    }
+
+    public boolean removeFromRentHistory(Hotel hotel) {
+        return rentedHotels.remove(hotel);
     }
 }
 

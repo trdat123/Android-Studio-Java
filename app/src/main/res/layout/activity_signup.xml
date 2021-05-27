@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Signup"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:background="@color/greenblue"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_waves"
+            android:id="@+id/waves"
+            android:layout_below="@+id/view1"/>
+
+        <TextView
+            android:id="@+id/AppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="CHINAGO"
+            android:textSize="20dp"
+            android:fontFamily="sans-serif-light"
+            android:layout_above="@+id/appDescription"
+            android:textColor="@color/white"
+            android:textStyle="normal"/>
+
+        <!-- 5 circles -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AppName"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal"
+            android:id="@+id/circle">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_circle_red"
+                tools:ignore="VectorDrawableCompat"
+                android:layout_marginRight="1dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_circle_yellow"
+                tools:ignore="VectorDrawableCompat"
+                android:layout_marginRight="1dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_circle"
+                tools:ignore="VectorDrawableCompat"
+                android:layout_marginRight="1dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_circle_pink"
+                tools:ignore="VectorDrawableCompat"
+                android:layout_marginRight="1dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_circle_gray"
+                tools:ignore="VectorDrawableCompat"
+                android:layout_marginRight="1dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ứng dụng đặt khách sạn chinago"
+            android:layout_margin="20dp"
+            android:textColor="@color/white"
+            android:layout_below="@id/circle"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textSize="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            app:errorEnabled="true"
+            app:helperTextTextColor="@android:color/holo_red_light"
+            app:boxStrokeErrorColor="@android:color/holo_red_light"
+            android:layout_gravity="center"
+            android:id="@+id/emailSignupLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:id="@+id/emailSignupField"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            app:errorEnabled="true"
+            app:helperTextTextColor="@android:color/holo_red_light"
+            app:boxStrokeErrorColor="@android:color/holo_red_light"
+            android:layout_gravity="center"
+            app:passwordToggleEnabled="true"
+            android:id="@+id/passwordSignupLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/passwordSignupField"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Confirm your password"
+            app:errorEnabled="true"
+            app:helperTextTextColor="@android:color/holo_red_light"
+            app:boxStrokeErrorColor="@android:color/holo_red_light"
+            android:layout_gravity="center"
+            app:passwordToggleEnabled="true"
+            android:id="@+id/confirmPasswordLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/confirmPasswordField"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Sign Up"
+            android:id="@+id/btnSignup"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-- or --"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log in"
+            android:layout_gravity="center"
+            android:id="@+id/loginLink"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarSignup"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+</LinearLayout>
