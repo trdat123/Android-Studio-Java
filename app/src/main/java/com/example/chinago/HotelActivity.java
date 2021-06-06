@@ -21,6 +21,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 
+import static com.example.chinago.HotelRecViewAdapter.removeFromRentPressed;
+
 public class HotelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private TextView HotelName;
@@ -31,6 +33,8 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
     private Button btnConfirmRent;
     private TextInputEditText roomInput;
     private TextInputLayout roomInputLayout;
+    public String rentDate;
+    private Button btnDate;
 
     public static final String HOTEL_ID_KEY = "hotelId";
 
@@ -41,10 +45,10 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
 
         initView();
 
-        Intent intent = getIntent();
-        if (null != intent) {
-            int hotelId = intent.getIntExtra(HOTEL_ID_KEY, -1);
-            if (hotelId != -1) {
+        Intent intent = getIntent();                                                //
+        if (null != intent) {                                                       // check null
+            int hotelId = intent.getIntExtra(HOTEL_ID_KEY, -1);        //
+            if (hotelId != -1) {                                                    //
                 Hotel incomingHotel = Utils.getInstance().getHotelById(hotelId);
                 if (null != incomingHotel) {
                     setData(incomingHotel);
@@ -59,12 +63,9 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             if (s.length() == 0 || Integer.parseInt(String.valueOf(s)) == 0) {
                                 roomInputLayout.setError("Vui lòng nhập số phòng hợp lệ");
-                                btnConfirmRent.setEnabled(false);
                             } else if (Integer.parseInt(String.valueOf(s)) > incomingHotel.getRoom()) {
                                 roomInputLayout.setError("Vượt quá số phòng còn lại");
-                                btnConfirmRent.setEnabled(false);
                             } else {
-                                btnConfirmRent.setEnabled(true);
                                 roomInputLayout.setError(null);
                             }
                         }
@@ -75,21 +76,19 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
                         }
                     });
 
-                    //handle if out of room, if still has room => proceed to book
                     handleOutOfRoom(incomingHotel);
+
+                    if (removeFromRentPressed) {
+                        rollbackRentedRoom(incomingHotel);
+                        removeFromRentPressed = false;
+                    }
                 }
             }
         }
     }
 
+    //handling out of room, if not out of room => proceed to rent rooms
     private void handleOutOfRoom(Hotel hotel) {
-        /*ArrayList<Hotel> outOfRoomHotels = Utils.getInstance().getRentedHotels();
-        for(Hotel h: outOfRoomHotels) {
-            if (hotel.getRoom() == 0) {
-                outOfRoom = true;
-            }
-        }*/
-
         boolean outOfRoom = false;
 
         if (hotel.getRoom() == 0) {
@@ -99,22 +98,29 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
         if (outOfRoom) {
             btnConfirmRent.setText("Đã hết phòng");
             btnConfirmRent.setEnabled(false);
+            btnDate.setEnabled(false);
+            roomInput.setEnabled(false);
         } else {
             btnConfirmRent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Utils.getInstance().addToRentHistory(hotel)) {
-                        // Add hotel to history list and update room
-                        Toast.makeText(HotelActivity.this, "Đã đặt phòng", Toast.LENGTH_SHORT).show();
-                        setRentedRoom(hotel);
-
-                        // Refresh page
-                        finish();
-                        Intent intent = getIntent();
-                        intent.getIntExtra(HOTEL_ID_KEY, -1);
-                        startActivity(intent);
+                    if (roomInput == null || rentDate == null) {
+                        Toast.makeText(HotelActivity.this, "Hãy nhập số phòng và ngày trả phòng", Toast.LENGTH_SHORT).show();
+                    } else if (roomInputLayout.getError() != null) {
+                        Toast.makeText(HotelActivity.this, "Hãy nhập số phòng phù hợp", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(HotelActivity.this, "Có lỗi xảy ra, xin vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                        if (Utils.getInstance().addToRentHistory(hotel)) {
+                            // Add hotel to history list and update room
+                            Toast.makeText(HotelActivity.this, "Đã đặt phòng", Toast.LENGTH_SHORT).show();
+                            setRentedRoom(hotel);
+                            setRentedDate(hotel);
+
+                            // Refresh page
+                            finish();
+                            Intent intent = getIntent();
+                            intent.getIntExtra(HOTEL_ID_KEY, -1);
+                            startActivity(intent);
+                        }
                     }
                 }
             });
@@ -128,11 +134,25 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
         HotelRoom.setText("Chỉ còn " + String.valueOf(hotel.getRoom()) + " phòng");
         RoomPrice.setText(hotel.getRoomPrice() + " mỗi phòng");
         Glide.with(this).asBitmap().load(hotel.getImageURl()).into(HotelImage);
-        btnConfirmRent.setEnabled(false);
     }
 
     private void setRentedRoom(Hotel hotel) {
-        hotel.setRoom(Integer.parseInt(String.valueOf(roomInput.getText())));
+        int availableRoom = hotel.getRoom();
+        int userInputRoom = Integer.parseInt(String.valueOf(roomInput.getText()));
+        hotel.setRentRoom(String.valueOf(userInputRoom));
+        hotel.setRoom(availableRoom - userInputRoom);
+    }
+
+    private void setRentedDate(Hotel hotel) {
+        hotel.setRentDate(rentDate);
+    }
+
+    private void rollbackRentedRoom(Hotel hotel) {
+        if (hotel.getRoom() != 0 || hotel.getRentRoom() != null) {
+            int rentedRoom = Integer.parseInt(hotel.getRentRoom());
+            int availableRoom = hotel.getRoom();
+            hotel.setRoom(rentedRoom + availableRoom);
+        }
     }
 
     private void initView() {
@@ -144,6 +164,7 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
         btnConfirmRent = findViewById(R.id.confirmRent);
         roomInput = findViewById(R.id.roomInput);
         roomInputLayout = findViewById(R.id.roomInputLayout);
+        btnDate = findViewById(R.id.btnDate);
     }
 
     public void chooseCheckoutDate(View view) {
@@ -159,6 +180,8 @@ public class HotelActivity extends AppCompatActivity implements DatePickerDialog
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+        month += 1;
+        rentDate = dayOfMonth + "/" + month + "/" + year;
+        btnDate.setText("Ngày trả: " + rentDate);
     }
 }

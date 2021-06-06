@@ -1,5 +1,6 @@
 package com.example.chinago;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
     private ArrayList<Hotel> hotels = new ArrayList<>();
     private Context context;
     private String parentActivity;
+    public static boolean removeFromRentPressed = false; // check if user press the "hủy đơn" button
 
     public HotelRecViewAdapter(Context context, String parentActivity) {
         this.context = context;
@@ -42,14 +45,22 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
         return holder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HotelRecViewAdapter.ViewHolder holder, int position) {
         holder.HotelName.setText(hotels.get(position).getName());
         holder.HotelDescription.setText(hotels.get(position).getDescription());
+        holder.RentDate.setText("Ngày trả phòng: " + hotels.get(position).getRentDate());
+        holder.RentRoom.setText("Số phòng đã đặt: " + hotels.get(position).getRentRoom());
 
         if (parentActivity.equals("Main")) {
             holder.btnDelete.setVisibility(View.GONE);
+            holder.RentDate.setVisibility(View.GONE);
+            holder.RentRoom.setVisibility(View.GONE);
         } else if (parentActivity.equals("RentHotel")) {
+            holder.HotelDescription.setVisibility(View.GONE);
+            holder.RentDate.setVisibility(View.VISIBLE);
+            holder.RentRoom.setVisibility(View.VISIBLE);
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,7 +71,7 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
                         public void onClick(DialogInterface dialog, int which) {
                             if (Utils.getInstance().removeFromRentHistory(hotels.get(position))) {
                                 Toast.makeText(context, "Đã hủy đơn đặt phòng", Toast.LENGTH_SHORT).show();
-                                notifyDataSetChanged();
+                                removeFromRentPressed = true;
                             } else {
                                 Toast.makeText(context, "Có lỗi xảy ra xin vui lòng thử lại", Toast.LENGTH_SHORT).show();
                             }
@@ -108,6 +119,8 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
         private CardView parent;
         private ImageView image;
         private TextView HotelDescription;
+        private TextView RentDate;
+        private TextView RentRoom;
         private Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -116,6 +129,8 @@ public class HotelRecViewAdapter extends RecyclerView.Adapter<HotelRecViewAdapte
             parent = itemView.findViewById(R.id.parent);
             image = itemView.findViewById(R.id.HotelImage);
             HotelDescription = itemView.findViewById(R.id.HotelDescription);
+            RentDate = itemView.findViewById(R.id.RentDate);
+            RentRoom = itemView.findViewById(R.id.RentRoom);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }

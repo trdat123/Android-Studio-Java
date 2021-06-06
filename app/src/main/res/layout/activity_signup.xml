@@ -33,7 +33,6 @@
             android:text="CHINAGO"
             android:textSize="20dp"
             android:fontFamily="sans-serif-light"
-            android:layout_above="@+id/appDescription"
             android:textColor="@color/white"
             android:textStyle="normal"/>
 

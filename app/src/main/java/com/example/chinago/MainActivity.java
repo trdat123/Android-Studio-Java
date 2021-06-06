@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setHotels(Utils.getInstance().getAllHotels());
 
         RecView.setAdapter(adapter);
-        RecView.setLayoutManager(new GridLayoutManager(this, 2));
+        RecView.setLayoutManager(new GridLayoutManager(this, 1));
 
         // History button in main window handling
         btnShowHistory.setOnClickListener(new View.OnClickListener() {

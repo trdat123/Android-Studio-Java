@@ -5,18 +5,22 @@ import java.util.Date;
 public class Hotel {
     private int id;
     private String name;
-    private String imageURl;
+    private String imageURl; // image of the hotel
     private String description;
-    private int room;
-    private String roomPrice;
+    private int room; // available room of the hotel
+    private String rentRoom; // number of room that user rent, this variable will be used when user press rent button
+    private String roomPrice; // the hotel will have the same room price for each room
+    private String rentDate; // the date user checkout, this variable will be used when user press rent button
 
-    public Hotel(int id, String name, String description, int room, String roomPrice, String imageURl) {
+    public Hotel(int id, String name, String description, int room, String roomPrice, String rentDate, String rentRoom, String imageURl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.room = room;
         this.imageURl = imageURl;
         this.roomPrice = roomPrice;
+        this.rentDate = rentDate;
+        this.rentRoom = rentRoom;
     }
 
     public String getName() {
@@ -55,10 +59,6 @@ public class Hotel {
         this.room = room;
     }
 
-    public void setRentedRoom(int room) {
-        this.room -= room;
-    }
-
     public void deleteRentedRoom(int room) {
         this.room += room;
     }
@@ -73,6 +73,22 @@ public class Hotel {
 
     public void setRoomPrice(String roomPrice) {
         this.roomPrice = roomPrice;
+    }
+
+    public String getRentDate() {
+        return rentDate;
+    }
+
+    public void setRentDate(String rentDate) {
+        this.rentDate = rentDate;
+    }
+
+    public String getRentRoom() {
+        return rentRoom;
+    }
+
+    public void setRentRoom(String rentRoom) {
+        this.rentRoom = rentRoom;
     }
 
     @Override
